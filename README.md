@@ -1,4 +1,19 @@
 World-Cup-Soccer
 ================
 
-World cup soccer webapp project
+INSANE HTML5 2D SOCCER SIMULATION GAME!
+
+YOU CAN BE ALL OF YOUR FAVOURITE PLAYERS!
+
+INCLUDING:
+
+RONALDO
+
+MESSI
+
+BALOTELLI
+
+AND MANY MORE!
+
+
+> coming to locations near you, July 2014.
