@@ -5,7 +5,12 @@
 		</title>
 		<link rel="stylesheet" type="text/css" href="source/css/style.css">
 	</head>
-	<body onload = "GAME.func.loadPlayersImg">
+	<body onload = "GAME.func.startDraw()">
+		<form>
+			<div id = "messiBtn"><input type="radio" name="selectPlayer" value="messi"> Messi</div>
+			<div id = "ronaldoBtn"><input type="radio" name="selectPlayer" value="ronaldo"> Ronaldo</div>
+			<div id = "balotelliBtn"><input type="radio" name="selectPlayer" value="balotelli"> Balotelli</div>
+		</form>
 		<div>
 			<canvas id = "cvs">
 				Get the newest version of Chrome.

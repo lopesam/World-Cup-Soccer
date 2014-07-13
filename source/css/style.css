@@ -4,14 +4,19 @@ body {
 	padding: 0px;
 }
 
+canvas {
+	position: relative;
+	left: -50%;
+	border: solid 5px #ffffff;
+}
+
 div {
 	position: absolute;
 	left: 50%;
 	top: 50px;
 }
 
-canvas {
-	position: relative;
-	left: -50%;
-	border: solid 5px #ffffff;
+#messiBtn {
+	position: fixed;
+	top: 100px;
 }

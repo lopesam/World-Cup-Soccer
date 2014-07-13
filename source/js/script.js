@@ -1,17 +1,21 @@
+// TODO :
 //
-// TODO:
+// GET THE RADIO BUTTONS ON THE SIDE W/ IMAGES!
 //
-// 1. TRY MAKING THE BUG FUNCTIONS VARIABLES AND NOT ON A SCOPE WHERE THEY CANT BE USED
+// LEARN ABOUT VELOCITY AND TRY TO MAKE THE BALL KICKABLE
 //
-// 2. if you pick any(player) Y = 0 || 9 || 17;
+// CLEAN UP THE CODE A LOT AND ADD COMMENTS!
 //
-// 3. FIX ALL BUGS THEN WORRY ABOUT OTHER STUFF
-//
-
 // Initializes the canvas
 var canvas = document.getElementById("cvs"),
 	context = canvas.getContext("2d"),
-	GAME = GAME || {};
+	GAME = GAME || {},
+	fps = 10,
+	drawInterval,
+	playersImg = new Image(),
+	keysDown = {};
+
+playersImg.src = "source/img/players.png";
 
 canvas.width = 800,
 canvas.height = 400;
@@ -23,11 +27,19 @@ context.imageSmoothingEnabled = false;
 
 // The game namespace
 GAME = {
-	// Holds the different playable characters data
+	gen: {
+		x: canvas.width,
+		y: canvas.height
+	},
+	player: {
+		x: canvas.width /2,
+		y: canvas.height /2,
+		X: 12
+	},
 	players: {
-		messi: {sp:[75, 25]},
-		ronaldo: [50, 50],
-		balotelli: [25, 75]
+		messi: [75, 25],
+		ronaldo: [100, 50],
+		balotelli: [125, 75]
 	},
 	team1: {
 		goals: 0
@@ -36,15 +48,11 @@ GAME = {
 		goals: 0
 	},
 	func: {
-
 		// Draws the soccer field
-		drawField: function () {
-			var x = canvas.width,
-				y = canvas.height;
-
+		drawField: function (x, y) {
 			// Drawing grass
 			context.beginPath();
-			context.rect(0, 0, canvas.width, canvas.height);
+			context.rect(0, 0, x, y);
 			context.fillStyle = "#526F35";
 			context.fill();
 			context.closePath();
@@ -73,64 +81,52 @@ GAME = {
 			context.stroke();
 			context.closePath();
 		},
-		// Calls all the methods
-		update: function () {
-			var values = this.getInput();
-			this.drawField();
-			this.drawPlayer(values,0,0,0);
-		},
-		// Attempts and fails to get input... should be deleted!
-		getInput: function () {
-			var keysDown = {},
-				srcX,
-				posX,
-				posY,
-				values;
-
-			addEventListener("keydown", function (e) {
-				keysDown[e.keyCode] = true;
-			}, false);
-
-			addEventListener("keyup", function (e) {
-				delete keysDown[e.keyCode];
-			}, false);
-
-			switch (keysDown) {
-				case 65:
-					srcX = 7;
-					break;
-				case 68:
-					srcX = 0;
-					break;
-				case 0:
-					posX = 0;
-					break;
-				case 0:
-					posX = 0;
-					posY = 0;
-				default:
-					srcX = 13;
-					break;
-			}
-			values = [srxX, posX, posY];
-			return values;
-		},
-		// Attempts and fails to init spritesheet
-		// Try to make it a variable
-		loadPlayersImg: function () {
-			var playersImg = new Image();
-
-			playersImg.onload = function () {
-				window.playersImg = playersImg;
-			}
-			playersImg.src = "source/img/players.png";
-		},
-		// Causes a buttload of errors that I can't fix
 		drawPlayer: function (x, y, posX, posY) {
-			context.drawImage(window.playersImg, x, y, 6, 8, posX, posY, 24, 32);
+			context.drawImage(playersImg, x, y, 6, 8, posX, posY, 24, 32);
+		},
+		checkKeys: function (e) {
+			if (65 in keysDown) {
+				GAME.player.x = GAME.player.x - 400 / GAME.players.balotelli[0];
+				GAME.player.X = 6;
+				console.log("left");
+			} else if (68 in keysDown) {
+				GAME.player.x = GAME.player.x + 400 / GAME.players.balotelli[0];
+				GAME.player.X = 0;
+				console.log("right");
+			} else if (83 in keysDown) {
+				GAME.player.y = GAME.player.y + 400 / GAME.players.balotelli[0];
+				console.log("down");
+			} else if (87 in keysDown) {
+				GAME.player.y = GAME.player.y - 400 / GAME.players.balotelli[0];
+				console.log("up");
+			} else {
+				GAME.player.X = 12;
+				console.log("I don't know what key was pressed");
+			}
+		},
+		startDraw: function () {
+			GAME.func.stopDraw();
+			drawInterval = setInterval(GAME.func.draw, fps);
+		},
+		stopDraw: function () {
+			clearInterval(drawInterval);
+		},
+		draw: function () {
+			context.clearRect(0,0, GAME.gen.x, GAME.gen.y);
+			GAME.func.checkKeys();
+			GAME.func.drawField(GAME.gen.x, GAME.gen.y);
+			GAME.func.drawPlayer(GAME.player.X, 0, GAME.player.x, GAME.player.y);
+		},
+		checkCollisions: function () {
+
 		}
 	}
 };
 
-// Run the game!
-GAME.func.update();
+addEventListener("keydown", function (e) {
+	keysDown[e.keyCode] = true;
+}, false);
+
+addEventListener("keyup", function (e) {
+	delete keysDown[e.keyCode];
+}, false);
