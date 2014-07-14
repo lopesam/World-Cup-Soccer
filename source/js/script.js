@@ -34,7 +34,8 @@ GAME = {
 	player: {
 		x: canvas.width /2,
 		y: canvas.height /2,
-		X: 12
+		X: 12,
+		Y: 0
 	},
 	players: {
 		messi: [75, 25],
@@ -88,20 +89,15 @@ GAME = {
 			if (65 in keysDown) {
 				GAME.player.x = GAME.player.x - 400 / GAME.players.balotelli[0];
 				GAME.player.X = 6;
-				console.log("left");
 			} else if (68 in keysDown) {
 				GAME.player.x = GAME.player.x + 400 / GAME.players.balotelli[0];
 				GAME.player.X = 0;
-				console.log("right");
 			} else if (83 in keysDown) {
 				GAME.player.y = GAME.player.y + 400 / GAME.players.balotelli[0];
-				console.log("down");
 			} else if (87 in keysDown) {
 				GAME.player.y = GAME.player.y - 400 / GAME.players.balotelli[0];
-				console.log("up");
 			} else {
 				GAME.player.X = 12;
-				console.log("I don't know what key was pressed");
 			}
 		},
 		startDraw: function () {
@@ -115,7 +111,7 @@ GAME = {
 			context.clearRect(0,0, GAME.gen.x, GAME.gen.y);
 			GAME.func.checkKeys();
 			GAME.func.drawField(GAME.gen.x, GAME.gen.y);
-			GAME.func.drawPlayer(GAME.player.X, 0, GAME.player.x, GAME.player.y);
+			GAME.func.drawPlayer(GAME.player.X, GAME.player.Y, GAME.player.x, GAME.player.y);
 		},
 		checkCollisions: function () {
 
