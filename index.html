@@ -5,17 +5,35 @@
 		</title>
 		<link rel="stylesheet" type="text/css" href="source/css/style.css">
 	</head>
-	<body onload = "GAME.func.startDraw()">
+	<body onload = "GAME.functions.startDrawing()">
 		<form>
-			<div id = "messiBtn"><input type="radio" name="selectPlayer" value="messi"> Messi</div>
-			<div id = "ronaldoBtn"><input type="radio" name="selectPlayer" value="ronaldo"> Ronaldo</div>
-			<div id = "balotelliBtn"><input type="radio" name="selectPlayer" value="balotelli"> Balotelli</div>
+			<div id = "messiBtn"><input type="radio" name="selectPlayer" value="messi" id = "messiRdio"> Messi<img src = "source/img/messi.png"></div>
+			<div id = "ronaldoBtn"><input type="radio" name="selectPlayer" value="ronaldo" id = "ronaldoRdio"> Ronaldo<img src = "source/img/ronaldo.png"></div>
+			<div id = "balotelliBtn"><input type="radio" name="selectPlayer" value="balotelli" id = "balotelliRdio"> Balotelli<img src = "source/img/balotelli.png"></div>
 		</form>
-		<div>
+		<div id = "canDiv">
 			<canvas id = "cvs">
 				Get the newest version of Chrome.
 			</canvas>
-		<div>
+		</div>
+		<div id = "centerHeader">
+			<div id = "header1">
+				WORLD CUP SOCCER<br>
+				<img src = "source/img/cup.png" id = "cupImg">
+			</div>
+		</div>
+		<div id = "instructions">
+			<span id = "header2">STUFF TO KNOW:</span>
+			<br />
+			<br />
+			Welcome to the World Cup!
+			<br />
+			use WASD or the arrow keys to walk around.
+			<br />
+			The ball, the score board, and possibly the goalkeeper aren't yet implemented.
+			<br />
+			Be creative!
+		</div>
 		<script src = "source/js/script.js"></script>
 	</body>
 </html>

@@ -1,3 +1,8 @@
+@font-face {
+	font-family: soccer;
+    src: url(../font/visitor1.ttf);
+}
+
 body {
 	background-color: #000000;
 	margin: 0px;
@@ -10,13 +15,63 @@ canvas {
 	border: solid 5px #ffffff;
 }
 
-div {
+img {
+	margin-left: 10px;
+}
+
+#canDiv {
 	position: absolute;
 	left: 50%;
 	top: 50px;
 }
 
-#messiBtn {
+#cupImg {
+	margin-left: 40%;
+}
+
+#centerHeader {
+	left: 50%;
+	position: absolute;
+}
+
+#header1 {
+	color: #ffffff;
+	font-family: soccer;
+	font-size: 72px;
+	left: -50%;
+	position: relative;
+	top: 475;
+}
+
+#header2 {
+	font-size: 36px;
+}
+
+#instructions {
+	color: #ffffff;	
+	font-family: soccer;
+	font-size: 24px;
+	left: 1375px;
 	position: fixed;
-	top: 100px;
+	top: 175px;
+}
+
+#messiBtn {
+	top: 150px;
+}
+
+#ronaldoBtn {
+	top: 250px;
+}
+
+#balotelliBtn {
+	top: 350px;
+}
+
+#messiBtn, #ronaldoBtn, #balotelliBtn {
+	color: #ffffff;
+	font-family: soccer;
+	font-size: 36px;
+	left: 100px;
+	position: fixed;
 }

@@ -1,12 +1,4 @@
-// TODO :
-//
-// GET THE RADIO BUTTONS ON THE SIDE W/ IMAGES!
-//
-// LEARN ABOUT VELOCITY AND TRY TO MAKE THE BALL KICKABLE
-//
-// CLEAN UP THE CODE A LOT AND ADD COMMENTS!
-//
-// Initializes the canvas
+// General variable declarations
 var canvas = document.getElementById("cvs"),
 	context = canvas.getContext("2d"),
 	GAME = GAME || {},
@@ -15,40 +7,111 @@ var canvas = document.getElementById("cvs"),
 	playersImg = new Image(),
 	keysDown = {};
 
+// Sets the path of the spritesheet
 playersImg.src = "source/img/players.png";
 
+// Sets The width and height of the game
 canvas.width = 800,
 canvas.height = 400;
 
-// Disable blurring when images get resized
+// Disables blurring when images get resized
 context.webkitImageSmoothingEnabled = false;
 context.mozImageSmoothingEnabled = false;
 context.imageSmoothingEnabled = false;
 
-// The game namespace
+// The GAME namespace
 GAME = {
-	gen: {
-		x: canvas.width,
-		y: canvas.height
-	},
+
+	// The player's properties
 	player: {
-		x: canvas.width /2,
-		y: canvas.height /2,
+		x: (canvas.width /2) - 12,
+		y: (canvas.height /2) - 16,
 		X: 12,
-		Y: 0
+		Y: 8,
+		speed: 100
 	},
-	players: {
-		messi: [75, 25],
-		ronaldo: [100, 50],
-		balotelli: [125, 75]
-	},
+
+	// Not implemented yet
 	team1: {
 		goals: 0
 	},
+
+	// Not implemented yet
 	team2: {
 		goals: 0
 	},
-	func: {
+
+	// the canvas's width and height
+	width: canvas.width,
+	height: canvas.height,
+	functions: {
+
+		// Checks if the player touches the border
+		checkBorderCollisions: function () {
+			if (GAME.player.x > (GAME.width + 24)) {
+				GAME.player.x -= 24;
+			} else if (GAME.player.x > (GAME.width - 24)) {
+				GAME.player.x -= 1;
+			} else if (GAME.player.x < (-48)) {
+				GAME.player.x += 24;
+			} else if (GAME.player.x < 0) {
+				GAME.player.x += 1;
+			} else if (GAME.player.y < (-64)) {
+				GAME.player.y += 32;
+			} else if (GAME.player.y < 0) {
+				GAME.player.y += 1;
+			} else if (GAME.player.y > (GAME.height + 32)) {
+				GAME.player.y -= 32;
+			} else if (GAME.player.y > (GAME.height - 32)) {
+				GAME.player.y -= 1;
+			}
+		},
+
+		// Checks to see what keys were pressed and moves the player if the arrow/wasd keys were pressed
+		checkKeys: function (e) {
+			if (65 in keysDown || 37 in keysDown) {
+				GAME.player.x = GAME.player.x - 400 / GAME.player.speed;
+				GAME.player.X = 6;
+			} else if (68 in keysDown || 39 in keysDown) {
+				GAME.player.x = GAME.player.x + 400 / GAME.player.speed;
+				GAME.player.X = 0;
+			} else if (83 in keysDown || 40 in keysDown) {
+				GAME.player.y = GAME.player.y + 400 / GAME.player.speed;
+			} else if (87 in keysDown || 38 in keysDown) {
+				GAME.player.y = GAME.player.y - 400 / GAME.player.speed;
+			} else {
+				GAME.player.X = 12;
+			}
+		},
+
+		// Checks to see if the human player clicked one of the radio buttons and switches player
+		checkRadioBtnsTicked: function () {
+			var messiBtn = document.getElementById("messiRdio"),
+				ronaldoBtn = document.getElementById("ronaldoRdio"),
+				balotelliBtn = document.getElementById("balotelliRdio");
+
+			if (messiBtn.checked === true) {
+				GAME.player.Y = 0;
+				GAME.player.speed = 75;
+			} else if (ronaldoBtn.checked === true) {
+				GAME.player.Y = 8;
+				GAME.player.speed = 115;
+			} else if (balotelliBtn.checked === true) {
+				GAME.player.Y = 16;
+				GAME.player.speed = 150;
+			}
+		},
+
+		// Calls all of the methods that are looped
+		draw: function () {
+			context.clearRect(0,0, GAME.width, GAME.height);
+			GAME.functions.checkKeys();
+			GAME.functions.checkRadioBtnsTicked();
+			GAME.functions.drawField(GAME.width, GAME.height);
+			GAME.functions.drawPlayer(GAME.player.X, GAME.player.Y, GAME.player.x, GAME.player.y);
+			GAME.functions.checkBorderCollisions();
+		},
+
 		// Draws the soccer field
 		drawField: function (x, y) {
 			// Drawing grass
@@ -82,47 +145,31 @@ GAME = {
 			context.stroke();
 			context.closePath();
 		},
-		drawPlayer: function (x, y, posX, posY) {
-			context.drawImage(playersImg, x, y, 6, 8, posX, posY, 24, 32);
-		},
-		checkKeys: function (e) {
-			if (65 in keysDown) {
-				GAME.player.x = GAME.player.x - 400 / GAME.players.balotelli[0];
-				GAME.player.X = 6;
-			} else if (68 in keysDown) {
-				GAME.player.x = GAME.player.x + 400 / GAME.players.balotelli[0];
-				GAME.player.X = 0;
-			} else if (83 in keysDown) {
-				GAME.player.y = GAME.player.y + 400 / GAME.players.balotelli[0];
-			} else if (87 in keysDown) {
-				GAME.player.y = GAME.player.y - 400 / GAME.players.balotelli[0];
-			} else {
-				GAME.player.X = 12;
-			}
-		},
-		startDraw: function () {
-			GAME.func.stopDraw();
-			drawInterval = setInterval(GAME.func.draw, fps);
-		},
-		stopDraw: function () {
-			clearInterval(drawInterval);
-		},
-		draw: function () {
-			context.clearRect(0,0, GAME.gen.x, GAME.gen.y);
-			GAME.func.checkKeys();
-			GAME.func.drawField(GAME.gen.x, GAME.gen.y);
-			GAME.func.drawPlayer(GAME.player.X, GAME.player.Y, GAME.player.x, GAME.player.y);
-		},
-		checkCollisions: function () {
 
+		// Draws the player
+		drawPlayer: function (srcX, srcY, posX, posY) {
+			context.drawImage(playersImg, srcX, srcY, 6, 8, posX, posY, 24, 32);
+		},
+
+		// Begins the loop
+		startDrawing: function () {
+			GAME.functions.stopDrawing();
+			drawInterval = setInterval(GAME.functions.draw, fps);
+		},
+
+		// This is called at the beginning of startDrawing() to make sure that an interval isn't already set
+		stopDrawing: function () {
+			clearInterval(drawInterval);
 		}
 	}
 };
 
+// Listens for when any key is pressed down
 addEventListener("keydown", function (e) {
 	keysDown[e.keyCode] = true;
 }, false);
 
+// Listens for when any key is let go of
 addEventListener("keyup", function (e) {
 	delete keysDown[e.keyCode];
 }, false);
