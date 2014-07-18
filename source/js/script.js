@@ -25,6 +25,18 @@ context.imageSmoothingEnabled = false;
 
 // The GAME namespace
 GAME = {
+	toggleSize: false,
+
+	// The ball's properties 
+	ball: {
+		x: (canvas.width / 2) - 100,
+		y: (canvas.height / 2),
+		X: 0,
+		Y: 24,
+		sizeX: 16,
+		sizeY: 16
+	},
+
 	pills: {
 		x: (canvas.width / 2) - 100,
 		y: (canvas.height / 2) - 100,
@@ -35,6 +47,7 @@ GAME = {
 		count: 0
 	},
 
+
 	// The player's properties
 	player: {
 		x: (canvas.width /2) - 12,
@@ -43,7 +56,8 @@ GAME = {
 		Y: 8,
 		sizeX: 24,
 		sizeY: 32,
-		speed: 100
+		speed: 100,
+		power: 115,
 	},
 
 	// Not implemented yet
@@ -66,6 +80,23 @@ GAME = {
 				context.font = "48px soccer";
 				context.fillStyle = "#000000";
 				context.fillText("You broke it...", (canvas.width / 2) - 160, canvas.height / 2);
+			}
+		},
+
+		// Checks if the player touches the ball
+		checkBallCollisions: function () {
+			if (GAME.player.x < (GAME.ball.x + GAME.ball.sizeX) && GAME.ball.y > GAME.player.y && (GAME.ball.y + GAME.ball.sizeY) < (GAME.player.y + GAME.player.sizeY * 1.2) && GAME.player.x > GAME.ball.x) {
+				console.log("COLLIDES");
+				GAME.ball.x -= 400 / GAME.player.power;
+			} else if ((GAME.player.x + GAME.player.sizeX) >  GAME.ball.x && GAME.ball.y > GAME.player.y && (GAME.ball.y + GAME.ball.sizeY) < (GAME.player.y + (GAME.player.sizeY * 1.2)) && (GAME.player.x + GAME.player.sizeX) < (GAME.ball.x + GAME.ball.sizeX)) {
+				console.log("COLLIDES");
+				GAME.ball.x += 400 / GAME.player.power;
+	    	} else if ((GAME.player.y + (GAME.player.sizeY / 2)) < (GAME.ball.y + GAME.ball.sizeY) && GAME.ball.x > GAME.player.x && (GAME.ball.x + GAME.ball.sizeX) < (GAME.player.x + GAME.player.sizeX) && GAME.ball.y < (GAME.player.y + GAME.player.sizeY / 2)) {
+				console.log("COLLIDES");
+				GAME.ball.y -= 400 / GAME.player.power;
+			} else if ((GAME.player.y + GAME.player.sizeY) > GAME.ball.y && GAME.ball.x > GAME.player.x && (GAME.ball.x + GAME.ball.sizeX) < (GAME.player.x + GAME.player.sizeX) && (GAME.player.y + GAME.player.sizeY) < (GAME.ball.y + GAME.ball.sizeY)) {
+				console.log("COLLIDES");
+				GAME.ball.y += 400 / GAME.player.power;
 			}
 		},
 
@@ -111,9 +142,16 @@ GAME = {
 		// Checks to see if playeer touches the pills
 		checkPillCollisions: function () {
 			if ((GAME.player.y + GAME.player.sizeY) > GAME.pills.y && GAME.player.y < (GAME.pills.y + 24) && (GAME.player.x + GAME.player.sizeX) > GAME.pills.x && GAME.player.x < (GAME.pills.x + 48)) {
-				GAME.player.sizeX *= 1.03;
-				GAME.player.sizeY *= 1.03;
-				GAME.player.speed *= 1.02;
+				if (!GAME.toggleSize){
+					if(GAME.player.speed > 40) {
+						GAME.player.speed *= 0.97;
+					} else {
+						GAME.player.speed = 40;
+					}
+				} else {
+					GAME.player.sizeX *= 1.03;
+					GAME.player.sizeY *= 1.03;
+				}
 				flag = true;
 				while (flag === true) {
 					console.log("pill teleporting");
@@ -138,13 +176,13 @@ GAME = {
 
 			if (messiBtn.checked === true) {
 				GAME.player.Y = 0;
-				GAME.player.speed = 75;
+				GAME.player.power = 75;
 			} else if (ronaldoBtn.checked === true) {
 				GAME.player.Y = 8;
-				GAME.player.speed = 115;
+				GAME.player.power = 115;
 			} else if (balotelliBtn.checked === true) {
 				GAME.player.Y = 16;
-				GAME.player.speed = 150;
+				GAME.player.power = 150;
 			}
 		},
 
@@ -154,12 +192,19 @@ GAME = {
 			GAME.functions.checkKeys();
 			GAME.functions.checkRadioBtnsTicked();
 			GAME.functions.drawField(GAME.width, GAME.height);
+			GAME.functions.drawBall(GAME.ball.X, GAME.ball.Y, GAME.ball.x, GAME.ball.y, GAME.ball.sizeX, GAME.ball.sizeY);
 			GAME.functions.drawPill(GAME.pills.X, GAME.pills.Y, GAME.pills.x, GAME.pills.y, GAME.pills.sizeX, GAME.pills.sizeY);
 			GAME.functions.drawPlayer(GAME.player.X, GAME.player.Y, GAME.player.x, GAME.player.y, GAME.player.sizeX, GAME.player.sizeY);
+			GAME.functions.checkBallCollisions();
 			GAME.functions.checkBorderCollisions();
 			GAME.functions.checkPillCollisions();
 			GAME.functions.drawText();
 			GAME.functions.alertSize();
+		},
+
+		// Draws the soccer ball
+		drawBall: function (srcX, srcY, posX, posY, sizeX, sizeY) {
+			context.drawImage(playersImg, srcX, srcY, 3, 3, posX, posY, sizeX, sizeY);
 		},
 
 		// Draws the soccer field
@@ -201,6 +246,7 @@ GAME = {
 			context.drawImage(playersImg, srcX, srcY, 6, 8, posX, posY, sizeX, sizeY);
 		},
 
+		// Draws the pill
 		drawPill: function (srcX, srcY, posX, posY, sizeX, sizeY) {
 			context.drawImage(playersImg, srcX, srcY, 16, 8, posX, posY, sizeX, sizeY);
 		},
